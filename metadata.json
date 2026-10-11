@@ -1,0 +1,8 @@
+{
+  "name": "Bluehouse Cafe QR Order",
+  "description": "ระบบสั่งอาหารผ่าน QR Code ประจำโต๊ะ — Next.js 14 + Tailwind CSS + Supabase",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
