@@ -1,0 +1,22 @@
+bluehouse-pos/
+├── .env.local.example
+├── .gitignore
+├── README.md
+├── next.config.js
+├── package.json
+├── postcss.config.js
+├── tailwind.config.ts
+├── tsconfig.json
+├── supabase/
+│   └── schema.sql
+├── lib/
+│   ├── config.ts            ← แก้ชื่อร้าน / จำนวนโต๊ะ / เมนู / ราคา ที่นี่ไฟล์เดียว
+│   └── supabase.ts
+└── app/
+    ├── globals.css
+    ├── layout.tsx
+    ├── page.tsx               → /
+    ├── table/[id]/page.tsx    → /table/1 ถึง /table/6
+    ├── qr/page.tsx            → /qr
+    ├── my-orders/page.tsx     → /my-orders
+    └── kitchen/page.tsx       → /kitchen

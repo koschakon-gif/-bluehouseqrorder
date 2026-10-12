@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodTech POS & Delivery · ระบบสั่งอาหารและจัดการออเดอร์</title>
+  
+  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              500: '#FF6B00',
+              600: '#FF5100',
+              700: '#EA4700',
+            },
+            charcoal: {
+              700: '#334155',
+              800: '#1E293B',
+              900: '#0F172A',
+            },
+            accent: {
+              green: '#10B981',
+              emerald: '#059669',
+            }
+          },
+          boxShadow: {
+            'card': '0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02)',
+            'brand': '0 10px 25px -5px rgba(255, 107, 0, 0.35)',
+            'cart': '-10px 0 35px rgba(0, 0, 0, 0.1)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .glass-header {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-charcoal-800 antialiased min-h-screen flex flex-col pb-24 md:pb-8">
+
+  <!-- 1. FIXED TOP HEADER -->
+  <header class="sticky top-0 z-40 glass-header border-b border-slate-200/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- Left: Brand Logo & Location -->
+        <div class="flex items-center gap-4 sm:gap-6">
+          <a href="#" class="flex items-center gap-2.5 group">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white shadow-brand transition-transform duration-300 group-hover:scale-105">
+              <i class="fa-solid fa-utensils text-lg"></i>
+            </div>
+            <div>
+              <span class="text-xl font-extrabold tracking-tight text-charcoal-900 block leading-none">
+                Food<span class="text-brand-500">Tech</span>
+              </span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">
+                POS & Delivery
+              </span>
+            </div>
+          </a>
+
+          <!-- Location Selector Badge -->
+          <div class="hidden lg:flex items-center gap-2 bg-slate-100/90 border border-slate-200/70 px-3.5 py-1.5 rounded-full text-xs cursor-pointer hover:bg-slate-200/70 transition">
+            <i class="fa-solid fa-location-dot text-brand-500 text-sm"></i>
+            <span class="text-slate-500">จัดส่งที่:</span>
+            <span class="font-bold text-charcoal-800">ตึก G Tower พระราม 9</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i>
+          </div>
+        </div>
+
+        <!-- Center: Search Input Bar -->
+        <div class="flex-1 max-w-md mx-2 sm:mx-4">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input 
+              id="searchInput" 
+              type="text" 
+              placeholder="ค้นหาเมนูอร่อย เช่น ข้าวกะเพรา, ต้มยำ, ชาไทย..."
+              class="w-full bg-slate-100/80 border border-slate-200/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-medium text-charcoal-900 placeholder:text-slate-400 focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        <!-- Right: Actions & Cart Trigger -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Notification Bell -->
+          <button type="button" class="relative w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition shadow-2xs">
+            <i class="fa-regular fa-bell text-sm"></i>
+            <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+            <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-brand-500"></span>
+          </button>
+
+          <!-- Shopping Cart Trigger Button -->
+          <button 
+            id="openCartBtn" 
+            type="button" 
+            class="relative flex items-center gap-2.5 bg-charcoal-900 text-white px-4 sm:px-5 py-2.5 rounded-2xl font-bold text-xs sm:text-sm hover:bg-charcoal-800 transition active:scale-95 shadow-md shadow-charcoal-900/15"
+          >
+            <i class="fa-solid fa-bag-shopping text-brand-500 text-base"></i>
+            <span class="hidden sm:inline">ตะกร้า</span>
+            <span id="cartCountBadge" class="bg-brand-500 text-white text-[11px] font-extrabold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+              0
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
+
+    <!-- 2. PROMO BANNER SLIDER / HERO -->
+    <section class="mb-8 relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-600 via-brand-500 to-amber-500 text-white shadow-brand">
+      <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -left-10 -top-10 w-60 h-60 bg-black/10 rounded-full blur-xl pointer-events-none"></div>
+      
+      <div class="grid md:grid-cols-12 items-center p-6 sm:p-10 gap-6 relative z-10">
+        <div class="md:col-span-8 space-y-3 sm:space-y-4">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+            <span>ดีลเด็ดวันนี้ ลด 50%</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+            อร่อยคุ้มทุกมื้อ <br class="hidden sm:inline">
+            คัดสรรโดย <span class="text-amber-200">เชฟร้านดัง Wongnai</span>
+          </h1>
+
+          <p class="text-xs sm:text-sm text-white/90 max-w-xl font-normal leading-relaxed">
+            สัมผัสความสดใหม่ของวัตถุดิบชั้นเลิศ ผัดสดใหม่ทุกจาน จัดส่งด่วนถึงโต๊ะและหน้าบ้านคุณ พร้อมโค้ดลดพิเศษ 
+            <span class="font-bold underline decoration-amber-300">FOODTECH50</span>
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="#menuGrid" class="inline-flex items-center gap-2 bg-charcoal-900 text-white px-6 py-3 rounded-2xl text-xs sm:text-sm font-bold hover:bg-black transition shadow-lg shadow-black/20 transform hover:-translate-y-0.5">
+              <span>สั่งเลยตอนนี้</span>
+              <i class="fa-solid fa-arrow-down text-xs text-brand-500"></i>
+            </a>
+            <div class="flex items-center gap-1.5 text-xs text-white/90 font-medium bg-black/20 px-3.5 py-3 rounded-2xl backdrop-blur-xs">
+              <i class="fa-solid fa-clock text-amber-300"></i>
+              <span>จัดส่งไวใน 20-30 นาที</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner Right Image Graphic -->
+        <div class="md:col-span-4 hidden md:flex justify-end">
+          <div class="relative w-56 h-56 rounded-3xl overflow-hidden border-4 border-white/30 shadow-2xl rotate-2 hover:rotate-0 transition duration-500">
+            <img 
+              src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" 
+              alt="Promo Dish" 
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute top-3 right-3 bg-red-600 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-xl shadow-md">
+              -50%
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FOOD CATEGORY TABS (STICKY HORIZONTAL SCROLL) -->
+    <nav class="sticky top-[81px] z-30 bg-[#F8FAFC]/95 backdrop-blur-md py-3 -mx-4 px-4 sm:mx-0 sm:px-0 mb-6 border-b border-slate-200/60">
+      <div id="categoryContainer" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar">
+        <!-- Injected via JavaScript -->
+      </div>
+    </nav>
+
+    <!-- Category Header and Search Status -->
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h2 id="currentCategoryTitle" class="text-xl sm:text-2xl font-extrabold text-charcoal-900">
+          เมนูยอดฮิต (Best Sellers)
+        </h2>
+        <p id="itemCountLabel" class="text-xs text-slate-400 mt-0.5">แสดงทั้งหมด 8 รายการ</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-500 font-medium hidden sm:inline">จัดเรียงตาม:</span>
+        <select id="sortSelect" class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold text-charcoal-800 outline-none cursor-pointer">
+          <option value="popular">ยอดนิยม</option>
+          <option value="price-asc">ราคา: ต่ำไปสูง</option>
+          <option value="price-desc">ราคา: สูงไปต่ำ</option>
+          <option value="rating">คะแนนรีวิวสูงสุด</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 4. FOOD ITEM GRID (2 Columns on Mobile, 4 Columns on Desktop) -->
+    <div id="menuGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+      <!-- Injected dynamically via JavaScript -->
+    </div>
+
+    <!-- Empty Search State (Hidden by default) -->
+    <div id="emptySearchState" class="hidden py-24 text-center">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-3xl text-slate-400 mb-4">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <h3 class="text-lg font-bold text-charcoal-800">ไม่พบเมนูที่คุณค้นหา</h3>
+      <p class="text-xs text-slate-400 mt-1">ลองค้นหาด้วยคำอื่น หรือเลือกดูหมวดหมู่ด้านบน</p>
+      <button onclick="resetSearch()" class="mt-4 px-5 py-2 rounded-xl bg-brand-500 text-white text-xs font-bold hover:bg-brand-600 transition">
+        ดูเมนูทั้งหมด
+      </button>
+    </div>
+
+  </main>
+
+  <!-- 5. INTERACTIVE SHOPPING CART SIDEBAR (SLIDE-OUT) -->
+  <div id="cartBackdrop" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <aside id="cartSidebar" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-cart translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <!-- Cart Header -->
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-500 font-bold">
+          <i class="fa-solid fa-cart-shopping text-base"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold text-charcoal-900">ตะกร้าของคุณ</h3>
+          <p id="cartItemsSubtitle" class="text-xs text-slate-400">0 รายการ</p>
+        </div>
+      </div>
+      <button id="closeCartBtn" type="button" class="w-9 h-9 rounded-full bg-slate-100 text-slate-400 hover:text-charcoal-900 hover:bg-slate-200 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Cart Item List Scrollable -->
+    <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 space-y-3.5 divide-y divide-slate-100">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <!-- Empty Cart State -->
+    <div id="cartEmptyPlaceholder" class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <div class="w-24 h-24 rounded-full bg-orange-50 flex items-center justify-center text-brand-500 text-3xl mb-4">
+        <i class="fa-solid fa-utensils"></i>
+      </div>
+      <h4 class="text-base font-bold text-charcoal-900">ยังไม่มีรายการอาหารในตะกร้า</h4>
+      <p class="text-xs text-slate-400 mt-1 max-w-xs">เลือกเมนูอาหารจานโปรดของคุณแล้วกดปุ่ม (+) เพื่อเริ่มสั่งอาหารได้เลย</p>
+    </div>
+
+    <!-- Cart Summary & Checkout Footer -->
+    <div id="cartFooter" class="border-t border-slate-100 p-5 bg-slate-50/70 space-y-3">
+      <!-- Special Instruction Note -->
+      <div class="relative">
+        <input 
+          id="orderNoteInput" 
+          type="text" 
+          placeholder="หมายเหตุถึงร้าน (เช่น ไม่ใส่ผักชี, เผ็ดน้อย)..."
+          class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-charcoal-800 placeholder:text-slate-400 outline-none focus:border-brand-500"
+        />
+      </div>
+
+      <!-- Pricing Breakdown -->
+      <div class="space-y-1.5 text-xs text-slate-600">
+        <div class="flex justify-between">
+          <span>ยอดรวมค่าอาหาร</span>
+          <span id="subtotalPrice" class="font-bold text-charcoal-800">฿0</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="flex items-center gap-1.5">
+            ค่าจัดส่ง (Lineman Express)
+            <span class="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.2 rounded font-bold">ฟรีโปร</span>
+          </span>
+          <span id="deliveryFee" class="font-bold text-emerald-600">฿0</span>
+        </div>
+        <div class="border-t border-slate-200/80 pt-2 flex justify-between text-sm font-extrabold text-charcoal-900">
+          <span>ยอดชำระทั้งสิ้น</span>
+          <span id="grandTotalPrice" class="text-lg text-brand-600">฿0</span>
+        </div>
+      </div>
+
+      <!-- Primary Checkout CTA Button -->
+      <button 
+        id="proceedCheckoutBtn" 
+        type="button" 
+        class="w-full bg-brand-500 hover:bg-brand-600 active:scale-95 text-white py-3.5 rounded-2xl font-extrabold text-sm shadow-brand transition-all duration-200 flex items-center justify-between px-5 disabled:opacity-50 disabled:pointer-events-none"
+      >
+        <span>สั่งซื้ออาหารเลย</span>
+        <div class="flex items-center gap-2">
+          <span id="btnTotalPrice">฿0</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 6. CHECKOUT CONFIRMATION MODAL -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl scale-95 transition-transform duration-300 transform max-h-[90vh] overflow-y-auto">
+      <div class="text-center mb-5">
+        <div class="w-16 h-16 rounded-3xl bg-brand-50 text-brand-500 mx-auto flex items-center justify-center text-2xl mb-3 shadow-inner">
+          <i class="fa-solid fa-receipt"></i>
+        </div>
+        <h3 class="text-xl font-extrabold text-charcoal-900">ยืนยันคำสั่งซื้อ</h3>
+        <p class="text-xs text-slate-400 mt-0.5">กรุณาตรวจสอบข้อมูลการจัดส่งและยอดเงิน</p>
+      </div>
+
+      <!-- Delivery Address Card -->
+      <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 mb-4 text-xs space-y-1.5">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="font-bold text-charcoal-800">สถานที่จัดส่ง</span>
+          <span class="text-brand-600 font-bold cursor-pointer hover:underline">แก้ไข</span>
+        </div>
+        <p class="font-bold text-charcoal-900 text-sm">ตึก G Tower พระราม 9 (ชั้น 15)</p>
+        <p class="text-slate-500">ถ.รัชดาภิเษก แขวงห้วยขวาง เขตห้วยขวาง กรุงเทพฯ</p>
+        <p class="text-slate-500 font-medium">โทร: 089-123-4567 (คุณสมชาย)</p>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="mb-5 space-y-2">
+        <label class="text-xs font-bold text-charcoal-800 block">เลือกวิธีชำระเงิน:</label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="flex items-center gap-2 p-3 rounded-xl border border-brand-500 bg-brand-50/50 cursor-pointer text-xs font-bold text-charcoal-800">
+            <input type="radio" name="paymentMethod" value="promptpay" checked class="text-brand-500 focus:ring-brand-500" />
+            <i class="fa-solid fa-qrcode text-blue-600"></i>
+            <span>PromptPay QR</span>
+          </label>
+          <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-white cursor-pointer text-xs font-bold text-charcoal-800 hover:bg-slate-50">
+            <input type="radio" name="paymentMethod" value="cash" class="text-brand-500 focus:ring-brand-500" />
+            <i class="fa-solid fa-money-bill-wave text-emerald-600"></i>
+            <span>เงินสดปลายทาง</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Order Summary Bill -->
+      <div class="border-t border-dashed border-slate-200 pt-3 mb-5 space-y-1 text-xs">
+        <div class="flex justify-between text-slate-600">
+          <span>จำนวนรายการ:</span>
+          <span id="modalItemCount" class="font-bold text-charcoal-900">0 รายการ</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>ยอดรวมทั้งหมด:</span>
+          <span id="modalGrandTotal" class="font-extrabold text-brand-600 text-base">฿0</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2">
+        <button 
+          id="confirmOrderBtn" 
+          type="button" 
+          class="w-full bg-accent-green hover:bg-accent-emerald text-white py-3.5 rounded-2xl font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition active:scale-95 flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-circle-check"></i>
+          <span>ส่งออเดอร์ไปยังร้านทันที</span>
+        </button>
+        <button 
+          id="cancelCheckoutBtn" 
+          type="button" 
+          class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-2xl font-bold text-xs transition"
+        >
+          กลับไปแก้ไขรายการ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. SUCCESS TOAST NOTIFICATION -->
+  <div id="successToast" class="fixed top-6 right-6 z-50 bg-charcoal-900 text-white px-5 py-4 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3.5 -translate-y-24 opacity-0 transition-all duration-500 pointer-events-none">
+    <div class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-white text-base">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <div>
+      <h5 class="text-xs font-bold text-white">สั่งซื้ออาหารสำเร็จเรียบร้อย!</h5>
+      <p id="toastOrderNumber" class="text-[11px] text-slate-400">ออเดอร์ #FT-2026 กำลังส่งไปยังห้องครัว</p>
+    </div>
+  </div>
+
+  <!-- FLOATING BOTTOM BAR (MOBILE ONLY) -->
+  <div id="mobileBottomBar" class="fixed bottom-0 inset-x-0 z-30 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 md:hidden flex items-center justify-between gap-3 shadow-lg">
+    <div class="pl-2">
+      <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ยอดรวม</p>
+      <p id="mobileTotalPrice" class="text-base font-extrabold text-brand-600 leading-none">฿0</p>
+    </div>
+    <button 
+      id="mobileCartTriggerBtn" 
+      type="button" 
+      class="bg-brand-500 text-white font-extrabold text-xs px-6 py-3 rounded-2xl shadow-brand flex items-center gap-2"
+    >
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>ดูตะกร้า (<span id="mobileBadge">0</span>)</span>
+    </button>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // --- MOCK DATABASE (Realistic Thai Food with Pricing & Wongnai Ratings) ---
+    const CATEGORIES = [
+      { id: 'all', name: 'เมนูทั้งหมด', icon: 'fa-solid fa-fire' },
+      { id: 'bestseller', name: 'เมนูยอดฮิต', icon: 'fa-solid fa-star' },
+      { id: 'single', name: 'อาหารจานเดียว', icon: 'fa-solid fa-bowl-rice' },
+      { id: 'snack', name: 'ของทานเล่น', icon: 'fa-solid fa-cookie-bite' },
+      { id: 'drinks', name: 'เครื่องดื่ม & ของหวาน', icon: 'fa-solid fa-mug-hot' },
+    ];
+
+    const FOOD_ITEMS = [
+      {
+        id: 1,
+        title: 'ข้าวผัดกะเพราเนื้อสับไข่ดาวกรอบ',
+        category: 'single',
+        isBestseller: true,
+        price: 89,
+        originalPrice: 110,
+        rating: 4.9,
+        reviewsCount: 342,
+        image: 'https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=600&q=80',
+        tag: 'ซิกเนเจอร์',
+      },
+      {
+        id: 2,
+        title: 'ข้าวหมูกรอบคั่วพริกเกลือไข่ออนเซ็น',
+        category: 'single',
+        isBestseller: true,
+        price: 95,
+        rating: 4.8,
+        reviewsCount: 215,
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+        tag: 'แนะนำ',
+      },
+      {
+        id: 3,
+        title: 'ต้มยำกุ้งแม่น้ำน้ำข้นหม้อไฟ',
+        category: 'single',
+        isBestseller: true,
+        price: 180,
+        rating: 4.9,
+        reviewsCount: 180,
+        image: 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=600&q=80',
+        tag: 'กุ้งแม่น้ำแท้',
+      },
+      {
+        id: 4,
+        title: 'ผัดไทยกุ้งสดไข่ห่อโบราณ',
+        category: 'single',
+        isBestseller: false,
+        price: 85,
+        rating: 4.7,
+        reviewsCount: 140,
+        image: 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=600&q=80',
+      },
+      {
+        id: 5,
+        title: 'ปีกไก่ทอดน้ำปลาเกาะสมุย',
+        category: 'snack',
+        isBestseller: true,
+        price: 79,
+        rating: 4.8,
+        reviewsCount: 95,
+        image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80',
+        tag: 'กรอบนอกนุ่มใน',
+      },
+      {
+        id: 6,
+        title: 'หมูสามชั้นทอดน้ำปลาจิ้มแจ่ว',
+        category: 'snack',
+        isBestseller: false,
+        price: 90,
+        rating: 4.6,
+        reviewsCount: 78,
+        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+      },
+      {
+        id: 7,
+        title: 'เกี๊ยวซ่าหมูทอดกรอบซอสญี่ปุ่น (6 ชิ้น)',
+        category: 'snack',
+        isBestseller: false,
+        price: 65,
+        rating: 4.7,
+        reviewsCount: 64,
+        image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=600&q=80',
+      },
+      {
+        id: 8,
+        title: 'ชาไทยพรีเมียมเข้มข้นสูตรโบราณ',
+        category: 'drinks',
+        isBestseller: true,
+        price: 45,
+        rating: 4.9,
+        reviewsCount: 420,
+        image: 'https://images.unsplash.com/photo-1558857563-b32142717a3e?auto=format&fit=crop&w=600&q=80',
+        tag: 'ยอดนิยม',
+      },
+      {
+        id: 9,
+        title: 'อเมริกาโน่น้ำส้มยูสุแท้ 100%',
+        category: 'drinks',
+        isBestseller: true,
+        price: 65,
+        rating: 4.8,
+        reviewsCount: 195,
+        image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80',
+      },
+      {
+        id: 10,
+        title: 'บิงซูชาไทยบัวลอยลาวา',
+        category: 'drinks',
+        isBestseller: false,
+        price: 99,
+        originalPrice: 129,
+        rating: 4.9,
+        reviewsCount: 88,
+        image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80',
+        tag: 'ของหวาน',
+      },
+    ];
+
+    // --- APPLICATION STATE ---
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'popular';
+    let cart = []; // Array of { id, title, price, quantity, image }
+
+    // --- DOM REFERENCES ---
+    const categoryContainer = document.getElementById('categoryContainer');
+    const menuGrid = document.getElementById('menuGrid');
+    const emptySearchState = document.getElementById('emptySearchState');
+    const currentCategoryTitle = document.getElementById('currentCategoryTitle');
+    const itemCountLabel = document.getElementById('itemCountLabel');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+
+    // Cart DOM
+    const openCartBtn = document.getElementById('openCartBtn');
+    const closeCartBtn = document.getElementById('closeCartBtn');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartBackdrop = document.getElementById('cartBackdrop');
+    const cartItemsList = document.getElementById('cartItemsList');
+    const cartEmptyPlaceholder = document.getElementById('cartEmptyPlaceholder');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartCountBadge = document.getElementById('cartCountBadge');
+    const cartItemsSubtitle = document.getElementById('cartItemsSubtitle');
+    const subtotalPrice = document.getElementById('subtotalPrice');
+    const grandTotalPrice = document.getElementById('grandTotalPrice');
+    const btnTotalPrice = document.getElementById('btnTotalPrice');
+    const proceedCheckoutBtn = document.getElementById('proceedCheckoutBtn');
+
+    // Mobile bar DOM
+    const mobileTotalPrice = document.getElementById('mobileTotalPrice');
+    const mobileBadge = document.getElementById('mobileBadge');
+    const mobileCartTriggerBtn = document.getElementById('mobileCartTriggerBtn');
+
+    // Checkout Modal DOM
+    const checkoutModal = document.getElementById('checkoutModal');
+    const cancelCheckoutBtn = document.getElementById('cancelCheckoutBtn');
+    const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+    const modalItemCount = document.getElementById('modalItemCount');
+    const modalGrandTotal = document.getElementById('modalGrandTotal');
+    const successToast = document.getElementById('successToast');
+    const toastOrderNumber = document.getElementById('toastOrderNumber');
+
+    // --- INITIALIZATION ---
+    function init() {
+      renderCategories();
+      renderMenu();
+      attachEvents();
+    }
+
+    // 1. Render Category Tabs
+    function renderCategories() {
+      categoryContainer.innerHTML = CATEGORIES.map(cat => {
+        const isActive = cat.id === currentCategory;
+        return `
+          <button 
+            type="button" 
+            onclick="selectCategory('${cat.id}')"
+            class="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
+              isActive 
+                ? 'bg-brand-500 text-white shadow-brand scale-100' 
+                : 'bg-white border border-slate-200 text-charcoal-700 hover:bg-slate-100'
+            }"
+          >
+            <i class="${cat.icon} text-xs ${isActive ? 'text-white' : 'text-brand-500'}"></i>
+            <span>${cat.name}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // Category Selector
+    window.selectCategory = function(catId) {
+      currentCategory = catId;
+      const found = CATEGORIES.find(c => c.id === catId);
+      currentCategoryTitle.textContent = found ? found.name : 'รายการอาหาร';
+      renderCategories();
+      renderMenu();
+    };
+
+    // 2. Filter & Sort Menu Items
+    function getFilteredItems() {
+      return FOOD_ITEMS.filter(item => {
+        // Category Filter
+        if (currentCategory === 'bestseller' && !item.isBestseller) return false;
+        if (currentCategory !== 'all' && currentCategory !== 'bestseller' && item.category !== currentCategory) return false;
+
+        // Search Filter
+        if (searchQuery.trim()) {
+          const query = searchQuery.toLowerCase();
+          return item.title.toLowerCase().includes(query) || (item.tag && item.tag.toLowerCase().includes(query));
+        }
+        return true;
+      }).sort((a, b) => {
+        if (currentSort === 'price-asc') return a.price - b.price;
+        if (currentSort === 'price-desc') return b.price - a.price;
+        if (currentSort === 'rating') return b.rating - a.rating;
+        return b.reviewsCount - a.reviewsCount;
+      });
+    }
+
+    // 3. Render Food Cards in Grid
+    function renderMenu() {
+      const items = getFilteredItems();
+      itemCountLabel.textContent = `แสดงทั้งหมด ${items.length} รายการ`;
+
+      if (items.length === 0) {
+        menuGrid.innerHTML = '';
+        emptySearchState.classList.remove('hidden');
+        return;
+      }
+
+      emptySearchState.classList.add('hidden');
+      menuGrid.innerHTML = items.map(food => {
+        const cartItem = cart.find(c => c.id === food.id);
+        const qtyInCart = cartItem ? cartItem.quantity : 0;
+
+        return `
+          <div class="bg-white rounded-3xl p-3 sm:p-4 border border-slate-200/80 shadow-card hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between group">
+            <!-- Food Image Container -->
+            <div>
+              <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 mb-3">
+                <img 
+                  src="${food.image}" 
+                  alt="${food.title}" 
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                ${food.tag ? `
+                  <span class="absolute top-2.5 left-2.5 bg-brand-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full shadow-md">
+                    ${food.tag}
+                  </span>
+                ` : ''}
+                ${food.originalPrice ? `
+                  <span class="absolute top-2.5 right-2.5 bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow-sm">
+                    ลด ${Math.round(((food.originalPrice - food.price) / food.originalPrice) * 100)}%
+                  </span>
+                ` : ''}
+              </div>
+
+              <!-- Rating & Reviews -->
+              <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 mb-1">
+                <div class="flex items-center text-amber-400">
+                  <i class="fa-solid fa-star text-[10px]"></i>
+                  <span class="text-charcoal-900 ml-1">${food.rating}</span>
+                </div>
+                <span>•</span>
+                <span class="text-slate-400">(${food.reviewsCount} รีวิว)</span>
+              </div>
+
+              <!-- Food Title -->
+              <h3 class="text-xs sm:text-sm font-bold text-charcoal-900 line-clamp-2 leading-snug">
+                ${food.title}
+              </h3>
+            </div>
+
+            <!-- Price & Add Button Bar -->
+            <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <span class="text-sm sm:text-base font-extrabold text-brand-600">฿${food.price}</span>
+                ${food.originalPrice ? `
+                  <span class="text-[10px] text-slate-400 line-through ml-1">฿${food.originalPrice}</span>
+                ` : ''}
+              </div>
+
+              <!-- Interactive Add Counter Button -->
+              ${qtyInCart === 0 ? `
+                <button 
+                  type="button" 
+                  onclick="addToCart(${food.id})"
+                  class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-accent-green hover:bg-accent-emerald text-white font-bold flex items-center justify-center transition-all duration-200 active:scale-90 shadow-sm"
+                  title="เพิ่มลงตะกร้า"
+                >
+                  <i class="fa-solid fa-plus text-xs"></i>
+                </button>
+              ` : `
+                <div class="flex items-center rounded-xl bg-slate-100 p-0.5">
+                  <button 
+                    type="button" 
+                    onclick="updateCartItemQty(${food.id}, -1)" 
+                    class="w-6 h-6 rounded-lg bg-white text-charcoal-800 text-[10px] font-bold flex items-center justify-center shadow-2xs hover:bg-slate-50"
+                  >
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <span class="w-6 text-center text-xs font-extrabold text-charcoal-900">${qtyInCart}</span>
+                  <button 
+                    type="button" 
+                    onclick="updateCartItemQty(${food.id}, 1)" 
+                    class="w-6 h-6 rounded-lg bg-accent-green text-white text-[10px] font-bold flex items-center justify-center shadow-2xs hover:bg-accent-emerald"
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 4. Cart Operations
+    window.addToCart = function(id) {
+      const item = FOOD_ITEMS.find(f => f.id === id);
+      if (!item) return;
+
+      const existing = cart.find(c => c.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          image: item.image,
+          quantity: 1
+        });
+      }
+
+      updateCartUI();
+      renderMenu();
+    };
+
+    window.updateCartItemQty = function(id, delta) {
+      const itemIndex = cart.findIndex(c => c.id === id);
+      if (itemIndex === -1) return;
+
+      cart[itemIndex].quantity += delta;
+      if (cart[itemIndex].quantity <= 0) {
+        cart.splice(itemIndex, 1);
+      }
+
+      updateCartUI();
+      renderMenu();
+    };
+
+    // Update Cart Sidebar Content & Calculations
+    function updateCartUI() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const delivery = 0; // Free promo
+      const grandTotal = subtotal + delivery;
+
+      // Update Badges & Counters
+      cartCountBadge.textContent = totalItems;
+      mobileBadge.textContent = totalItems;
+      cartItemsSubtitle.textContent = `${totalItems} รายการอาหาร`;
+
+      // Update Currency Displays
+      subtotalPrice.textContent = `฿${subtotal.toLocaleString()}`;
+      grandTotalPrice.textContent = `฿${grandTotal.toLocaleString()}`;
+      btnTotalPrice.textContent = `฿${grandTotal.toLocaleString()}`;
+      mobileTotalPrice.textContent = `฿${grandTotal.toLocaleString()}`;
+
+      // Handle Empty State Toggle
+      if (cart.length === 0) {
+        cartItemsList.classList.add('hidden');
+        cartEmptyPlaceholder.classList.remove('hidden');
+        cartFooter.classList.add('hidden');
+        proceedCheckoutBtn.disabled = true;
+      } else {
+        cartItemsList.classList.remove('hidden');
+        cartEmptyPlaceholder.classList.add('hidden');
+        cartFooter.classList.remove('hidden');
+        proceedCheckoutBtn.disabled = false;
+
+        // Render Item Rows
+        cartItemsList.innerHTML = cart.map(item => `
+          <div class="flex items-center justify-between pt-3.5 first:pt-0">
+            <div class="flex items-center gap-3">
+              <img src="${item.image}" alt="${item.title}" class="w-12 h-12 rounded-xl object-cover border border-slate-100" />
+              <div>
+                <h5 class="text-xs font-bold text-charcoal-900 line-clamp-1 max-w-[170px]">${item.title}</h5>
+                <p class="text-xs font-extrabold text-brand-600 mt-0.5">฿${item.price}</p>
+              </div>
+            </div>
+
+            <!-- Plus / Minus Controls -->
+            <div class="flex items-center rounded-xl bg-slate-100 p-1">
+              <button 
+                type="button" 
+                onclick="updateCartItemQty(${item.id}, -1)" 
+                class="w-6 h-6 rounded-lg bg-white text-charcoal-800 text-[10px] font-bold flex items-center justify-center shadow-2xs hover:bg-slate-50"
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="w-7 text-center text-xs font-extrabold text-charcoal-900">${item.quantity}</span>
+              <button 
+                type="button" 
+                onclick="updateCartItemQty(${item.id}, 1)" 
+                class="w-6 h-6 rounded-lg bg-brand-500 text-white text-[10px] font-bold flex items-center justify-center shadow-2xs hover:bg-brand-600"
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 5. Sidebar Toggle Actions
+    function openCart() {
+      cartSidebar.classList.remove('translate-x-full');
+      cartBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeCart() {
+      cartSidebar.classList.add('translate-x-full');
+      cartBackdrop.classList.add('opacity-0', 'pointer-events-none');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // 6. Checkout Modal & Order Placement
+    function openCheckout() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      modalItemCount.textContent = `${totalItems} รายการ`;
+      modalGrandTotal.textContent = `฿${grandTotal.toLocaleString()}`;
+
+      checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
+      checkoutModal.querySelector('div').classList.remove('scale-95');
+    }
+
+    function closeCheckout() {
+      checkoutModal.classList.add('opacity-0', 'pointer-events-none');
+      checkoutModal.querySelector('div').classList.add('scale-95');
+    }
+
+    function completeOrder() {
+      closeCheckout();
+      closeCart();
+
+      // Clear cart
+      const randomOrderNo = `FT-${Math.floor(1000 + Math.random() * 9000)}`;
+      toastOrderNumber.textContent = `ออเดอร์ #${randomOrderNo} กำลังส่งไปยังห้องครัว`;
+
+      cart = [];
+      updateCartUI();
+      renderMenu();
+
+      // Show Success Toast
+      successToast.classList.remove('-translate-y-24', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        successToast.classList.add('-translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 4500);
+    }
+
+    window.resetSearch = function() {
+      searchInput.value = '';
+      searchQuery = '';
+      currentCategory = 'all';
+      renderCategories();
+      renderMenu();
+    };
+
+    // --- EVENT LISTENERS ---
+    function attachEvents() {
+      openCartBtn.addEventListener('click', openCart);
+      mobileCartTriggerBtn.addEventListener('click', openCart);
+      closeCartBtn.addEventListener('click', closeCart);
+      cartBackdrop.addEventListener('click', closeCart);
+
+      proceedCheckoutBtn.addEventListener('click', openCheckout);
+      cancelCheckoutBtn.addEventListener('click', closeCheckout);
+      confirmOrderBtn.addEventListener('click', completeOrder);
+
+      // Search Filter
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderMenu();
+      });
+
+      // Sort Filter
+      sortSelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        renderMenu();
+      });
+    }
+
+    // Run Application
+    init();
+  </script>
+</body>
+</html>
