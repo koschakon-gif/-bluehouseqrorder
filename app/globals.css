@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-cream: #fbf9f5;
+    --bg-card: #ffffff;
+    --color-wood: #6b4423;
+    --color-wood-dark: #4a2e15;
+    --color-wood-light: #8d5b4c;
+    --color-amber-gold: #c68a4c;
+    --border-warm: #eee6db;
+    --text-primary: #2b231d;
+    --text-secondary: #74675e;
+  }
+
+  body {
+    background-color: var(--bg-cream);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Custom minimal scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media print {
+  @page {
+    margin: 8mm;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}

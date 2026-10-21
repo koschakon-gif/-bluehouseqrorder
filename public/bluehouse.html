@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bluehouse Cafe · คาเฟ่สไตล์มินิมอล & กาแฟคั่วพิเศษ</title>
+  <meta name="description" content="สัมผัสประสบการณ์ดื่มด่ำกาแฟสไตล์มินิมอล บรรยากาศอบอุ่น พร้อมระบบสั่งอาหารผ่าน QR Code สะดวก รวดเร็ว เสิร์ฟตรงถึงโต๊ะ">
+
+  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Plus Jakarta Sans', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#0F172A',
+            coffee: {
+              50: '#FDF8F6',
+              100: '#F2E8E5',
+              200: '#EADDD7',
+              600: '#9C6644',
+              700: '#7F5539',
+              800: '#4A3525',
+              900: '#2A1F18',
+            },
+            amber: {
+              accent: '#F59E0B',
+            },
+            coral: '#F43F5E',
+          },
+          boxShadow: {
+            'soft': '0 20px 40px -15px rgba(15, 23, 42, 0.05)',
+            'glow': '0 10px 30px -10px rgba(59, 130, 246, 0.3)',
+            'amber-glow': '0 10px 30px -10px rgba(245, 158, 11, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .custom-gradient-text {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #9C6644 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 antialiased selection:bg-amber-400 selection:text-slate-900">
+
+  <!-- 1. NAVIGATION BAR -->
+  <header class="fixed top-0 inset-x-0 z-50 glass-nav border-b border-slate-200/70 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-950 flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+            <span class="text-amber-400">B</span>
+          </div>
+          <div>
+            <span class="text-xl font-extrabold tracking-tight text-midnight block leading-none">Bluehouse Cafe</span>
+            <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest block mt-0.5">Specialty Coffee</span>
+          </div>
+        </a>
+
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="#about" class="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors">เรื่องราวของเรา</a>
+          <a href="#features" class="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors">จุดเด่น</a>
+          <a href="#menu" class="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors">เมนูแนะนำ</a>
+          <a href="#reviews" class="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors">รีวิวจากลูกค้า</a>
+          <a href="#faq" class="text-sm font-medium text-slate-600 hover:text-blue-900 transition-colors">คำถามที่พบบ่อย</a>
+        </nav>
+
+        <!-- CTAs -->
+        <div class="hidden sm:flex items-center gap-3">
+          <a href="/kitchen" class="text-xs font-semibold text-slate-600 px-3.5 py-2 rounded-xl hover:bg-slate-100 transition-colors">
+            <i class="fa-solid fa-kitchen-set mr-1.5 text-slate-500"></i> จอครัว
+          </a>
+          <a href="/table/1" class="inline-flex items-center gap-2 bg-midnight text-white text-xs font-bold px-5 py-2.5 rounded-2xl shadow-soft hover:bg-blue-900 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
+            <i class="fa-solid fa-qrcode text-amber-400"></i>
+            <span>สแกนสั่งที่โต๊ะ</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" type="button" class="md:hidden p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors" aria-label="เปิดเมนู">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-3">
+      <a href="#about" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50">เรื่องราวของเรา</a>
+      <a href="#features" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50">จุดเด่น</a>
+      <a href="#menu" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50">เมนูแนะนำ</a>
+      <a href="#reviews" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50">รีวิว</a>
+      <a href="#faq" class="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50">คำถามที่พบบ่อย</a>
+      <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+        <a href="/table/1" class="w-full text-center bg-midnight text-white text-xs font-bold py-3 rounded-xl shadow-md">
+          <i class="fa-solid fa-qrcode text-amber-400 mr-1.5"></i> สั่งอาหารที่โต๊ะ (Table 1)
+        </a>
+        <a href="/kitchen" class="w-full text-center border border-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl">
+          ระบบหน้าจอครัว (พนักงาน)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. HERO SECTION -->
+  <section id="hero" class="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden">
+    <!-- Ambient Background Lighting -->
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-blue-200/40 via-amber-100/30 to-indigo-100/40 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <!-- Text Column -->
+        <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/10 text-xs font-bold text-amber-800">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+            <span>Minimalist Coffee Haven · สั่งสะดวกที่โต๊ะผ่าน QR Code</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl lg:text-6xl font-extrabold tracking-tight text-midnight leading-[1.15]">
+            ความสุขที่เรียบง่าย <br>
+            ในทุกหยดของ <span class="custom-gradient-text">กาแฟแก้วโปรด</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+            สัมผัสกลิ่นอายความอบอุ่นในคาเฟ่สไตล์มินิมอล เมล็ดกาแฟคัดพิเศษ คั่วสดใหม่วันต่อวัน 
+            พร้อมระบบสั่งอาหารผ่าน QR Code ที่โต๊ะ เลือกระดับความหวานได้ตามใจ เสิร์ฟตรงถึงที่
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="/table/1" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-midnight text-white px-8 py-4 rounded-2xl font-bold text-sm shadow-xl shadow-slate-900/15 hover:bg-blue-900 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
+              <i class="fa-solid fa-mobile-screen text-amber-400 text-base"></i>
+              <span>สั่งอาหารผ่าน QR ทันที</span>
+            </a>
+            <a href="#menu" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-sm hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 shadow-soft">
+              <span>ดูเมนูเครื่องดื่มและเบเกอรี่</span>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-400"></i>
+            </a>
+          </div>
+
+          <!-- Quick Stats / Badges -->
+          <div class="pt-8 border-t border-slate-200/80 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-midnight">100%</p>
+              <p class="text-xs text-slate-500 font-medium">Arabica คั่วสด</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-midnight">4 ระดับ</p>
+              <p class="text-xs text-slate-500 font-medium">ความหวาน 10-100%</p>
+            </div>
+            <div>
+              <p class="text-2xl sm:text-3xl font-extrabold text-midnight">6 โต๊ะ</p>
+              <p class="text-xs text-slate-500 font-medium">สแกนเสิร์ฟตรง</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Hero Showcase -->
+        <div class="lg:col-span-5 relative">
+          <!-- Main Hero Image Frame -->
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[4/5] group">
+              <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1000&q=80" alt="Bluehouse Cafe Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              
+              <div class="absolute bottom-6 left-6 right-6 text-white">
+                <span class="inline-block px-3 py-1 rounded-full bg-amber-500/90 text-xs font-extrabold mb-2 backdrop-blur-sm">
+                  Signature Specialty
+                </span>
+                <h3 class="text-xl font-bold">สัมผัสบรรยากาศคาเฟ่แห่งความสงบ</h3>
+                <p class="text-xs text-slate-200 mt-1">คัดสรรทุกเมนูด้วยความประณีต อบอุ่นในทุกช่วงเวลา</p>
+              </div>
+            </div>
+
+            <!-- Floating Badge Card 1 -->
+            <div class="absolute -top-6 -left-6 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3.5 hidden sm:flex animate-bounce" style="animation-duration: 4s;">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+                <i class="fa-solid fa-mug-hot text-lg"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-900">กาแฟคั่วบดใหม่</p>
+                <p class="text-[10px] text-slate-500">หอมกรุ่น ละมุนทุกแก้ว</p>
+              </div>
+            </div>
+
+            <!-- Floating Badge Card 2 -->
+            <div class="absolute -bottom-6 -right-4 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3.5 hidden sm:flex">
+              <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
+                <i class="fa-solid fa-qrcode text-lg"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-900">QR Smart Ordering</p>
+                <p class="text-[10px] text-emerald-600 font-semibold">● ออเดอร์ส่งตรงเข้าครัว</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. FEATURES / SERVICES GRID -->
+  <section id="features" class="py-24 bg-white border-y border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2">ทำไมต้องเลือกเรา</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-midnight">มาตรฐานระดับพรีเมียมในทุกรายละเอียด</p>
+        <p class="text-sm text-slate-500 mt-3 font-normal">เราใส่ใจตั้งแต่การคัดสรรเมล็ดกาแฟ เทคนิคการสกัด ไปจนถึงประสบการณ์การสั่งอาหารของลูกค้า</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="p-8 rounded-3xl bg-slate-50/80 border border-slate-100 hover:border-blue-200 hover:shadow-soft transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-blue-900 text-amber-400 flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-seedling"></i>
+          </div>
+          <h3 class="text-lg font-bold text-midnight mb-2.5">เมล็ดกาแฟคัดสรรพิเศษ</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            คัดเลือกเมล็ดกาแฟอาราบิก้าแท้จากแหล่งปลูกชั้นนำ ผ่านการคั่วระดับ Medium-Dark ให้กลิ่นหอมละมุนและบอดี้ที่ลงตัว
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="p-8 rounded-3xl bg-slate-50/80 border border-slate-100 hover:border-amber-200 hover:shadow-soft transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 class="text-lg font-bold text-midnight mb-2.5">ปรับความหวานตามใจชอบ</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            ตอบโจทย์สายรักสุขภาพและสายหวาน ด้วยตัวเลือกระดับความหวาน 4 ระดับ: 10%, 25%, 50% และ 100% สั่งได้ตรงใจทุกแก้ว
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="p-8 rounded-3xl bg-slate-50/80 border border-slate-100 hover:border-coral/30 hover:shadow-soft transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-coral text-white flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <h3 class="text-lg font-bold text-midnight mb-2.5">สั่งที่โต๊ะ รวดเร็ว ไม่ต้องรอคิว</h3>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            สแกน QR Code ประจำโต๊ะเลือกเมนูและกดยืนยัน ออเดอร์จะส่งตรงเข้าหน้าจอห้องครัวทันที พร้อมระบบติดตามสถานะอาหาร
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. PRODUCT / PRICING SECTION -->
+  <section id="menu" class="py-24 bg-[#F8FAFC]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2">เมนูซิกเนเจอร์</h2>
+          <p class="text-3xl sm:text-4xl font-extrabold text-midnight">เมนูยอดนิยมประจำ Bluehouse Cafe</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="/admin/menu" class="text-xs font-bold text-blue-700 bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors">
+            <i class="fa-solid fa-gear mr-1"></i> จัดการเมนู / แก้ราคา
+          </a>
+        </div>
+      </div>
+
+      <!-- Product Cards Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Item 1: Americano (Popular) -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-soft hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 mb-4">
+              <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80" alt="อเมริกาโน่เย็น" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-3 left-3 bg-midnight text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md">
+                ★ เมนูขายดี
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-400">เครื่องดื่ม</span>
+              <span class="text-xs font-bold text-amber-600">เลือกหวาน 10-100%</span>
+            </div>
+            <h3 class="text-base font-bold text-midnight mt-1">อเมริกาโน่เย็น</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">กาแฟช็อตเอสเปรสโซ่เข้มข้น ผสานน้ำเย็นสดชื่น หอมกรุ่น ดื่มง่ายตลอดวัน</p>
+          </div>
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-lg font-extrabold text-midnight">฿55</span>
+            <a href="/table/1" class="text-xs font-bold bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-midnight hover:text-white transition-colors">
+              + สั่งเลย
+            </a>
+          </div>
+        </div>
+
+        <!-- Item 2: Hot Latte -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-soft hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 mb-4">
+              <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80" alt="ลาเต้ร้อน" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md">
+                แนะนำ
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-400">เครื่องดื่ม</span>
+              <span class="text-xs font-bold text-amber-600">ฟองนมนุ่ม</span>
+            </div>
+            <h3 class="text-base font-bold text-midnight mt-1">ลาเต้ร้อน</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">ช็อตกาแฟสกัดสดผสมกับนมสดสตรีมเนียนนุ่ม ได้รสชาติหวานมันกลมกล่อม</p>
+          </div>
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-lg font-extrabold text-midnight">฿60</span>
+            <a href="/table/1" class="text-xs font-bold bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-midnight hover:text-white transition-colors">
+              + สั่งเลย
+            </a>
+          </div>
+        </div>
+
+        <!-- Item 3: Matcha Latte -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-soft hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 mb-4">
+              <img src="https://images.unsplash.com/photo-1536256263959-770b48d82b08?auto=format&fit=crop&w=600&q=80" alt="มัทฉะลาเต้" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-400">เครื่องดื่ม</span>
+              <span class="text-xs font-bold text-amber-600">อุจิมัทฉะ 100%</span>
+            </div>
+            <h3 class="text-base font-bold text-midnight mt-1">มัทฉะลาเต้</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">ผงชาเขียวมัทฉะแท้นำเข้าจากญี่ปุ่น ตีสดแก้วต่อแก้ว หอมเข้มข้น</p>
+          </div>
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-lg font-extrabold text-midnight">฿75</span>
+            <a href="/table/1" class="text-xs font-bold bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-midnight hover:text-white transition-colors">
+              + สั่งเลย
+            </a>
+          </div>
+        </div>
+
+        <!-- Item 4: Chocolate Cake / Bakery -->
+        <div class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-soft hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-100 mb-4">
+              <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80" alt="เค้กช็อกโกแลต" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              <span class="absolute top-3 left-3 bg-coral text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-md">
+                อบสดใหม่
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-400">เบเกอรี่</span>
+              <span class="text-xs font-bold text-emerald-600">Fresh Daily</span>
+            </div>
+            <h3 class="text-base font-bold text-midnight mt-1">เค้กช็อกโกแลตฟัดจ์</h3>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">เนื้อเค้กช็อกโกแลตนุ่มหนึบ เคลือบด้วยกานาชช็อกโกแลตพรีเมียมเข้มข้น</p>
+          </div>
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-lg font-extrabold text-midnight">฿85</span>
+            <a href="/table/1" class="text-xs font-bold bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-midnight hover:text-white transition-colors">
+              + สั่งเลย
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SOCIAL PROOF / TESTIMONIALS -->
+  <section id="reviews" class="py-24 bg-white border-t border-slate-200/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2">เสียงตอบรับจากลูกค้า</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-midnight">ความประทับใจที่อยากบอกต่อ</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Review 1 -->
+        <div class="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 shadow-soft">
+          <div class="flex text-amber-400 text-sm mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+            "ชอบระบบสแกน QR มาก สะดวกสุดๆ ไม่ต้องเดินไปสั่งที่เคาน์เตอร์ กาแฟอร่อยมากโดยเฉพาะลาเต้ เลือกความหวาน 25% ได้ตามใจเลยค่ะ"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-sm">
+              น
+            </div>
+            <div>
+              <p class="text-sm font-bold text-midnight">คุณน้ำหวาน</p>
+              <p class="text-xs text-slate-400">ลูกค้าประจำโต๊ะ 2</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 shadow-soft">
+          <div class="flex text-amber-400 text-sm mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+            "บรรยากาศร้านมินิมอลสบายตา เหมาะกับการมานั่งทำงาน ชาไทยกับครัวซองต์เข้ากันได้ดีมาก ราคาสมเหตุสมผล พนักงานบริการดีครับ"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-sm">
+              ภ
+            </div>
+            <div>
+              <p class="text-sm font-bold text-midnight">คุณภัทร</p>
+              <p class="text-xs text-slate-400">สายกาแฟ Specialty</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="p-8 rounded-3xl bg-slate-50/70 border border-slate-100 shadow-soft">
+          <div class="flex text-amber-400 text-sm mb-4">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-sm text-slate-600 leading-relaxed mb-6">
+            "เค้กช็อกโกแลตอร่อยเข้มข้นมาก สั่งผ่านมือถือแป๊บเดียวอาหารก็มาเสิร์ฟที่โต๊ะแล้ว ประทับใจความเร็วและความสะอาดของร้านมากค่ะ"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-indigo-900 text-white flex items-center justify-center font-bold text-sm">
+              ม
+            </div>
+            <div>
+              <p class="text-sm font-bold text-midnight">คุณมินต์</p>
+              <p class="text-xs text-slate-400">Cafe Hopper</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FAQ SECTION (ACCORDION) -->
+  <section id="faq" class="py-24 bg-[#F8FAFC]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-2">คำถามที่พบบ่อย</h2>
+        <p class="text-3xl sm:text-4xl font-extrabold text-midnight">FAQ ข้อมูลการใช้งาน</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- FAQ 1 -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-soft">
+          <button class="faq-btn w-full px-6 py-5 text-left flex items-center justify-between font-bold text-midnight hover:bg-slate-50/80 transition-colors">
+            <span>สั่งอาหารผ่าน QR Code ต้องโหลดแอปพลิเคชันหรือไม่?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            ไม่ต้องโหลดแอปพลิเคชันใดๆ เพิ่มเติมครับ เพียงเปิดแอปกล้องถ่ายรูป (Camera) บนมือถือ iOS หรือ Android หรือสแกนผ่านแอป LINE แล้วแตะลิงก์ที่เด้งขึ้นมาก็สามารถเริ่มสั่งได้ทันที
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-soft">
+          <button class="faq-btn w-full px-6 py-5 text-left flex items-center justify-between font-bold text-midnight hover:bg-slate-50/80 transition-colors">
+            <span>สามารถเลือกระดับความหวานของเครื่องดื่มได้อย่างไร?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            เมื่อลูกค้าแตะที่เมนูเครื่องดื่ม ระบบจะมีหน้าต่างให้เลือกระดับความหวานได้ 4 ระดับ: 10%, 25%, 50% และ 100% พร้อมช่องระบุคำขอพิเศษ (เช่น แยกน้ำแข็ง) ครับ
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-soft">
+          <button class="faq-btn w-full px-6 py-5 text-left flex items-center justify-between font-bold text-midnight hover:bg-slate-50/80 transition-colors">
+            <span>ชำระเงินค่าอาหารและเครื่องดื่มด้วยวิธีใด?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            สามารถชำระเงินผ่านการสแกน QR PromptPay หรือชำระด้วยเงินสดที่เคาน์เตอร์เมื่อรับอาหารเรียบร้อยแล้วได้เลยครับ
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-soft">
+          <button class="faq-btn w-full px-6 py-5 text-left flex items-center justify-between font-bold text-midnight hover:bg-slate-50/80 transition-colors">
+            <span>ทางร้านเปิดให้บริการเวลาใดบ้าง?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+            Bluehouse Cafe เปิดให้บริการทุกวันอังคาร - วันอาทิตย์ ตั้งแต่เวลา 08:30 น. ถึง 17:30 น. (หยุดทุกวันจันทร์)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FOOTER -->
+  <footer class="bg-midnight text-white pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-10 mb-12">
+        <!-- Brand Info -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-amber-400 font-bold text-lg">
+              B
+            </div>
+            <span class="text-xl font-extrabold tracking-tight">Bluehouse Cafe</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            คาเฟ่สไตล์มินิมอล กาแฟคั่วสด เครื่องดื่ม และเบเกอรี่โฮมเมด มอบช่วงเวลาแห่งความสุขในทุกๆ วัน
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-sm font-bold mb-4 text-amber-400">ลิงก์ด่วน</h4>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li><a href="#hero" class="hover:text-white transition">หน้าแรก</a></li>
+            <li><a href="#features" class="hover:text-white transition">จุดเด่นของร้าน</a></li>
+            <li><a href="#menu" class="hover:text-white transition">เมนูเครื่องดื่ม</a></li>
+            <li><a href="#faq" class="hover:text-white transition">คำถามที่พบบ่อย</a></li>
+          </ul>
+        </div>
+
+        <!-- Portals for Staff & Ordering -->
+        <div>
+          <h4 class="text-sm font-bold mb-4 text-amber-400">ระบบสั่งและจัดการ</h4>
+          <ul class="space-y-2 text-xs text-slate-300">
+            <li><a href="/table/1" class="hover:text-white transition">สั่งอาหารที่โต๊ะ (Table 1)</a></li>
+            <li><a href="/kitchen" class="hover:text-white transition">หน้าจอครัว (พนักงาน)</a></li>
+            <li><a href="/admin/menu" class="hover:text-white transition">จัดการเมนูและราคา (แอดมิน)</a></li>
+            <li><a href="/my-orders" class="hover:text-white transition">ติดตามสถานะอาหาร</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact & Location -->
+        <div>
+          <h4 class="text-sm font-bold mb-4 text-amber-400">เวลาเปิดให้บริการ</h4>
+          <p class="text-xs text-slate-300">อังคาร - อาทิตย์: 08:30 - 17:30 น.</p>
+          <p class="text-xs text-slate-400 mt-1">ปิดทุกวันจันทร์</p>
+          <div class="mt-4 flex gap-3 text-slate-400 text-lg">
+            <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-amber-400 transition"><i class="fa-brands fa-line"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>© 2026 Bluehouse Cafe. All rights reserved.</p>
+        <p>Crafted with precision for Minimalist Coffee Lovers</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    // 1. Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn?.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu on click link
+    document.querySelectorAll('#mobileMenu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // 2. Interactive FAQ Accordion
+    document.querySelectorAll('.faq-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('i');
+        const isOpen = !content.classList.contains('hidden');
+
+        // Close all first
+        document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.faq-btn i').forEach(ic => ic.style.transform = 'rotate(0deg)');
+
+        if (!isOpen) {
+          content.classList.remove('hidden');
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
